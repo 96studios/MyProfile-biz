@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .top-container {
+            width: 100%;
+            background: white;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+
+        .content-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error {
+            background-color: #fdecea;
+            color: #d32f2f;
+            border: 1px solid #ef9a9a;
+        }
+
+        .success {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border: 1px solid #a5d6a7;
+        }
+
+        /* Frame height settings */
+        .github-embed-container {
+            height: 60vh;
+        }
+
+        @media (max-width: 1024px) {
+            .github-embed-container {
+                height: 50vh;
+            }
+            
+            .top-container {
+                padding-top: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-container {
+                padding: 30px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <div class="content-wrapper">
+            <h1>Profile</h1>
+            <p>Enter your customer ID</p>
+            
+            <div class="input-group">
+                <label for="customerId">Customer ID</label>
+                <input type="text" id="customerId" placeholder="96-" value="96-" maxlength="9">
+            </div>
+            
+            <button onclick="redirectToProfile()">Continue</button>
+            
+            <div id="error" class="message error"></div>
+            <div id="success" class="message success">Redirecting to your profile...</div>
+        </div>
+    </div>
+
+    <script>
+        // Customer database
+        const customerDatabase = {
+            "96-QNJPW6": "https://shokanematome.netlify.app",
+            "96-GHI789": "",
+            "96-JKL012": ""
+        };
+
+        // Customer ID validation
+        function redirectToProfile() {
+            const customerId = document.getElementById('customerId').value.trim().toUpperCase();
+            const errorElement = document.getElementById('error');
+            const successElement = document.getElementById('success');
+            
+            // Hide messages
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            // Validate format (96- followed by 6 alphanumeric characters)
+            const idPattern = /^96-[A-Z0-9]{6}$/;
+            
+            if (!idPattern.test(customerId)) {
+                errorElement.textContent = "Invalid format. Please use 96- followed by 6 alphanumeric characters.";
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Check if customer ID exists
+            if (customerDatabase.hasOwnProperty(customerId)) {
+                successElement.style.display = 'block';
+                // Redirect after a short delay to show the success message
+                setTimeout(() => {
+                    window.location.href = customerDatabase[customerId];
+                }, 1000);
+            } else {
+                errorElement.textContent = "Customer ID not found. Please check your ID and try again.";
+                errorElement.style.display = 'block';
+            }
+        }
+        
+        // Auto-format the input (add dash after 2 characters)
+        document.getElementById('customerId').addEventListener('input', function(e) {
+            let value = this.value.toUpperCase();
+            if (value.length === 2 && !value.includes('-')) {
+                this.value = value + '-';
+            }
+        });
+        
+        // Allow form submission with Enter key
+        document.getElementById('customerId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                redirectToProfile();
+            }
+        });
+    </script>
+</body>
+</html>
